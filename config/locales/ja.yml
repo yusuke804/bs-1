@@ -1,0 +1,19 @@
+ja:
+ activerecord:
+  models:
+     post: 投稿 
+  attributes:
+   post:
+     id: ID
+     title: タイトル
+     contents: 投稿内容
+     created_at: 登録日時
+
+   user: 
+      id: ID
+      name: 名前
+      password: パスワード
+      password_confirmation: パスワード（確認）
+      created_at: 作成日時
+      admin: 管理者権限
+      

@@ -1,0 +1,20 @@
+h1 募集の詳細
+
+.nav.justify-content-end
+  = link_to "募集一覧", posts_path, class: 'nav-link'
+table.table.table-hover
+  tbody
+    tr
+      th= Post.human_attribute_name(:id)
+      td= @post.id
+    tr 
+      th= Post.human_attribute_name(:title)
+      td= @post.title
+    tr
+      th= Post.human_attribute_name(:contents)
+      td= simple_format(h(@post.contents), {}, sanitize: false, wrapper_tag: "div")
+    tr
+      th= Post.human_attribute_name(:created_at)
+      td= @post.created_at
+= link_to '編集', edit_post_path, class: 'btn btn-primary mr-3'
+= link_to '削除', @post, class: 'btn btn-danger mr-3', method: :delete, data: { confirm: "本当に削除しますか？" }

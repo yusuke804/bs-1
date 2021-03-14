@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title
+      | BS-1
+    meta[name="viewport" content="width=device-width,initial-scale=1"]
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+  body
+    .app-title.navbar.navbar-expand-md.navbar-danger.bg-danger
+      .navbar-brand BS-1
+
+      ul.navbar-nav.ml-auto
+        - if current_user
+          li.nav-item= link_to "募集一覧", posts_path, class: "nav-link"
+          - if current_user.admin?
+            li.nav-item= link_to "ユーザー一覧", admin_users_path, class: "nav-link"
+          li.nav-item= link_to "ログアウト", logout_path, method: :delete,  class: "nav-link"
+        - else
+          li.nav-item= link_to "ログイン", login_path, class: "nav-link"
+    
+    .container
+      - flash.each do |message_type, message|
+        div.alert class="alert-#{message_type}" = message  
+    = yield

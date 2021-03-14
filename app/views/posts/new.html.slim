@@ -1,0 +1,6 @@
+h1 募集の作成
+
+.nav.justify-content-end
+  = link_to "一覧", posts_path, class: "nav-link"
+
+= render partial: 'form', locals: { post: @post }
