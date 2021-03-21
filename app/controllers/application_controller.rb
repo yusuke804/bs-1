@@ -8,6 +8,13 @@ class ApplicationController < ActionController::Base
 		@current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
 	end
 
+	def correct_user
+		@post = current_user.posts.find_by(id: params[:id])
+		unless @post
+		  redirect_to posts_path 
+		end
+	  end
+
 	def login_required
 		redirect_to login_path unless current_user
 	end

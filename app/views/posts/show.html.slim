@@ -16,5 +16,6 @@ table.table.table-hover
     tr
       th= Post.human_attribute_name(:created_at)
       td= @post.created_at
-= link_to '編集', edit_post_path, class: 'btn btn-primary mr-3'
-= link_to '削除', @post, class: 'btn btn-danger mr-3', method: :delete, data: { confirm: "本当に削除しますか？" }
+      - if current_user == @post.user
+        = link_to '編集', edit_post_path, class: 'btn btn-primary mr-3'
+        = link_to '削除', @post, class: 'btn btn-danger mr-3', method: :delete, data: { confirm: "本当に削除しますか？" }

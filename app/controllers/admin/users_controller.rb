@@ -1,13 +1,13 @@
 class Admin::UsersController < ApplicationController
   skip_before_action :login_required
   before_action :require_admin
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
-    @users = User.order(created_at: :desc).all
+    @users = User.recent.all
   end
   
   def show
-    @user = User.find(params[:id])
   end
 
   def new
@@ -18,31 +18,32 @@ class Admin::UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      redirect_to admin_users_path, notice: "ユーザー「#{@user.name}」が登録されました。"
+      flash[:success] = "ユーザー「#{@user.name}」が登録されました。"
+      redirect_to admin_users_path
     else
+      flash.now[:danger] = "ユーザー登録に失敗しました"
       render :new
     end
 
   end
 
   def edit
-    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
-
     if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: "ユーザー「#{@user.name}」を更新しました。"
+      flash[:success] = "ユーザー「#{@user.name}」を更新しました。"
+      redirect_to admin_user_path(@user)
     else
+      flash.now[:danger] = "ユーザー情報の更新に失敗しました"
       render :new
     end
   end
 
   def destroy
-    @user = User.find(params[:id])
     @user.destroy
-    redirect_to admin_users_path, notice: "ユーザー「#{@user.name}を削除しました。"
+    flash[:success] = "ユーザー「#{@user.name}を削除しました。"
+    redirect_to admin_users_path
   end 
 
   private
@@ -54,4 +55,8 @@ class Admin::UsersController < ApplicationController
   def require_admin
     redirect_to posts_path unless current_user.admin?
   end 
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 end

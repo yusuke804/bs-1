@@ -1,12 +1,11 @@
 class PostsController < ApplicationController
   before_action :correct_user, only: [:edit, :update, :destroy]
-
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
   def index
-    @posts = Post.order(created_at: :desc).all
+    @posts = Post.recent.all
   end
 
-  def show
-    @post = Post.find(params[:id]) 
+  def show 
   end
 
   def new
@@ -17,7 +16,8 @@ class PostsController < ApplicationController
     @post = current_user.posts.new(post_params)
 
     if @post.save
-      redirect_to posts_url, notice: "新規募集「#{@post.title}」を作成しました。"
+      flash[:success] = "募集を作成しました！"
+      redirect_to posts_url
     else
       flash.now[:danger] = "募集の作成に失敗しました。"
       render :new
@@ -25,19 +25,22 @@ class PostsController < ApplicationController
   end
 
   def edit
-    @post = Post.find(params[:id])
   end
 
   def update
-    post = Post.find(params[:id])
-    post.update!(post_params)
-    redirect_to posts_url, notice: "募集「#{post.title}」を更新しました!"
+    if @post.update(post_params)
+      flash[:success] = "募集を更新しました！"
+      redirect_to posts_url
+    else 
+      flash.now[:danger] = "募集の更新に失敗しました"
+      render :edit
+    end
   end 
 
   def destroy
-    post = Post.find(params[:id])
-    post.delete 
-    redirect_to posts_url, notice: "募集「#{post.title}」を削除しました"
+      @post.destroy 
+      flash[:success] = "募集を削除しました"
+      redirect_to posts_url
   end
 
   private 
@@ -46,10 +49,7 @@ class PostsController < ApplicationController
     params.require(:post).permit(:title, :contents)
   end
 
-  def correct_user
-    @post = current_user.posts.find_by(id: params[:id])
-    unless @post
-      redirect_to posts_path 
-    end
+  def set_post
+    @post = Post.find(params[:id])
   end
 end

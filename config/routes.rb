@@ -9,5 +9,9 @@ Rails.application.routes.draw do
     resources :users
   end
 
+  get '/signup', to: 'users#new'
+  post '/signup', to: 'users#create'
+  resources :users, only: [:show, :edit, :update]
+
   resources :posts
 end
